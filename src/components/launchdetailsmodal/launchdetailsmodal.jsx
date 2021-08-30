@@ -13,16 +13,10 @@ export default function LaunchDetailsModal({
   handleCancel,
 }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  /*   const [modalWidth, setModalWidth] = useState(window.innerWidth);
-   */
+
   useEffect(() => {
     setIsModalVisible(visible);
   }, [visible]);
-
-  /*  useEffect(() => {
-    setModalWidth(window.innerWidth);
-    console.debug("window.innerWidth", window.innerWidth);
-  }, [window.innerWidth]); */
 
   return (
     <Modal
