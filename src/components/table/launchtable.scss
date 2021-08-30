@@ -9,6 +9,10 @@
   box-sizing: content-box;
   background: #ffffff;
   margin-bottom: 1em;
+  @media screen and (max-width: 767px) {
+    width: 90vw;
+    margin: 0 5vw;
+  }
   .indicator {
     font-weight: 500;
     display: flex;
@@ -34,6 +38,19 @@
     margin: 0px 10px;
   }
   table {
+    @media screen and (max-width: 400px) {
+      tr {
+        th,
+        td {
+          font-size: 10px !important;
+          padding: 10px !important;
+        }
+        .ant-tag {
+          font-size: 10px !important;
+          padding: 4px 10px !important;
+        }
+      }
+    }
     thead {
       height: 40px !important;
       background: #f4f5f7;
@@ -77,7 +94,22 @@
   background: #ffffff;
   /* Nitro Shadow */
   border-radius: 6px;
-  min-width: 544px;
+  // min-width: 544px;
+  max-width: 544px;
+  @media screen and (max-width: 544px) {
+    width: 90vw !important;
+    .modal-body {
+      .mission-description {
+        width: 100%;
+      }
+      .details-row {
+        width: 100%;
+      }
+    }
+  }
+  @media screen and (max-width: 400px) {
+    width: 92vw !important;
+  }
   padding-bottom: 0 !important;
   .modal-header {
     display: inline-flex;
@@ -86,6 +118,15 @@
       margin: 0 24px;
       .mission-name-status {
         display: inline-flex;
+        @media screen and (max-width: 400px) {
+          display: grid !important;
+          .mission-name {
+            font-size: 14px !important;
+          }
+          .mission-status-badge {
+            margin: 10px 10px !important;
+          }
+        }
         .mission-name {
           height: 18px;
           font-family: Inter;
@@ -132,7 +173,7 @@
   }
   .modal-body {
     .mission-description {
-      width: 480px;
+      max-width: 480px;
       font-family: Inter;
       font-style: normal;
       font-weight: normal;
@@ -149,7 +190,7 @@
       border-bottom: 1px solid #e4e4e7;
       padding: 16px 0px 0px;
       height: 46.96px;
-      width: 480px;
+      max-width: 480px;
       transform: rotate(0.11deg);
       &:nth-last-child(1) {
         border-bottom: none;
@@ -176,6 +217,16 @@
         line-height: 14px;
         /* Nitro Gray 800 */
         color: #1f2937;
+      }
+      @media screen and(max-width:400px) {
+        padding-bottom: 16px !important;
+        .detail-value,
+        .detail-legend {
+          font-size: 12px !important;
+        }
+        .detail-value {
+          left: 120px;
+        }
       }
     }
   }

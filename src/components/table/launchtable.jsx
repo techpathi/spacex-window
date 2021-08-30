@@ -21,18 +21,28 @@ const columns = [
     dataIndex: "launchNumber",
     key: "launchNumber",
     render: (text) => <p>{text}</p>,
+    responsive: ["md", "lg"],
   },
   {
-    title: "Launched(UTC)",
+    title: "Launch Time(UTC)",
     dataIndex: "launchTime",
     key: "launchTime",
     render: (text) => <p>{text}</p>,
+    responsive: ["md", "lg"],
+  },
+  {
+    title: "Launched(UTC)",
+    dataIndex: "launchTimeShort",
+    key: "launchTimeShort",
+    render: (text) => <p>{text}</p>,
+    responsive: ["sm", "xs"],
   },
   {
     title: "Location",
     dataIndex: "location",
     key: "location",
     render: (text) => <p>{text}</p>,
+    responsive: ["md", "lg"],
   },
   {
     title: "Mission",
@@ -45,6 +55,7 @@ const columns = [
     dataIndex: "orbit",
     key: "orbit",
     render: (text) => <p>{text}</p>,
+    responsive: ["md", "lg"],
   },
   {
     title: "Launch Status",
@@ -74,6 +85,7 @@ const columns = [
     dataIndex: "rocket",
     key: "rocket",
     render: (text) => <p>{text}</p>,
+    responsive: ["md", "lg"],
   },
 ];
 
@@ -84,6 +96,9 @@ const generateTableData = (launchesData) => {
       launchNumber: index + 1,
       launchTime: moment(Date.parse(launch.launch_date)).format(
         "DD MMM YYYY HH:mm"
+      ),
+      launchTimeShort: moment(Date.parse(launch.launch_date)).format(
+        "DD MMM YYYY"
       ),
       location: launch.launch_site,
       mission: launch.mission_name,
@@ -163,7 +178,7 @@ export default function LaunchTable({
                 payloadType = payloadData.type;
                 return APICall(`${LAUNCHPAD_URL}${launchpad_id}`).then(
                   (launchpadData) => {
-                    launchSite = launchpadData.full_name;
+                    launchSite = launchpadData.name;
                     let launchItem = {
                       id: launch_id,
                       flight_number: flight_number,
@@ -193,6 +208,9 @@ export default function LaunchTable({
         });
 
         setTimeout(() => {
+          launchData.sort(
+            (a, b) => new Date(b.launch_date) - new Date(a.launch_date)
+          );
           setLaunchesData(launchData);
           localStorage.setItem("launchData", JSON.stringify(launchData));
           setLaunchesToDisplay(launchData);
@@ -451,7 +469,7 @@ export default function LaunchTable({
               };
             }}
             onChange={onPageChange}
-            pagination={{ current: currentPage }}
+            pagination={{ current: currentPage, hideOnSinglePage: true }}
           />
           <LaunchDetailsModal
             launchToModal={launchToModal}
