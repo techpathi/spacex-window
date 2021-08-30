@@ -1,0 +1,189 @@
+.table-container {
+  position: absolute;
+  width: 75%;
+  height: auto;
+  top: 184px;
+  border: 1px solid #e4e4e7;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  box-sizing: content-box;
+  background: #ffffff;
+  margin-bottom: 1em;
+  .indicator {
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 14px;
+    /* Nitro Gray 700 */
+    color: #374151;
+    padding: 20%;
+  }
+  .ant-tag {
+    border-radius: 20px;
+    height: 21px;
+    padding: 4px 12px;
+    font-family: Helvetica Neue;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 13px;
+    margin: 0px 10px;
+  }
+  table {
+    thead {
+      height: 40px !important;
+      background: #f4f5f7;
+      margin: 0px 0px;
+      tr {
+        th {
+          font-family: Inter;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 12px;
+          color: #4b5563;
+        }
+      }
+    }
+    tbody {
+      .ant-table-row {
+        vertical-align: initial;
+        height: 53px !important;
+      }
+      tr {
+        td {
+          font-family: Inter;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 12px;
+          line-height: 12px;
+          color: #1f2937;
+        }
+      }
+    }
+  }
+  .ant-table-pagination.ant-pagination {
+    margin-right: 8px;
+  }
+}
+
+.launch-modal {
+  // padding: 32px; Netlify fix
+  /* Nitro White */
+  background: #ffffff;
+  /* Nitro Shadow */
+  border-radius: 6px;
+  min-width: 544px;
+  padding-bottom: 0 !important;
+  .modal-header {
+    display: inline-flex;
+    .mission-overview {
+      display: block;
+      margin: 0 24px;
+      .mission-name-status {
+        display: inline-flex;
+        .mission-name {
+          height: 18px;
+          font-family: Inter;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 18px;
+          line-height: 18px;
+          color: #1f2937;
+        }
+        .mission-status-badge {
+          border-radius: 20px;
+          height: 21px;
+          margin: 0 10px;
+          font-family: Helvetica Neue;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 13px;
+        }
+      }
+      .rocket-name {
+        height: 12px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 12px;
+        color: #374151;
+      }
+      .social-links {
+        height: 16px;
+        margin: 12px 0;
+        .social-icon {
+          &:nth-child(1) {
+            margin-left: 0px;
+          }
+          width: 16px;
+          height: 16px;
+          color: #374151;
+          margin: 0 8px;
+        }
+      }
+    }
+  }
+  .modal-body {
+    .mission-description {
+      width: 480px;
+      font-family: Inter;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 24px;
+      color: #1f2937;
+      margin: 16px 0;
+      .wikipedia-description {
+        font-weight: 500;
+        color: blue;
+      }
+    }
+    .details-row {
+      border-bottom: 1px solid #e4e4e7;
+      padding: 16px 0px 0px;
+      height: 46.96px;
+      width: 480px;
+      transform: rotate(0.11deg);
+      &:nth-last-child(1) {
+        border-bottom: none;
+      }
+      .detail-legend {
+        width: 164px;
+        height: 14px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 14px;
+        /* Nitro Gray 600 */
+        color: #4b5563;
+      }
+      .detail-value {
+        height: 14px;
+        position: absolute;
+        left: 180px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 14px;
+        /* Nitro Gray 800 */
+        color: #1f2937;
+      }
+    }
+  }
+}
+
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  top: 50%;
+  position: absolute;
+}

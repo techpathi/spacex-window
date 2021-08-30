@@ -1,0 +1,71 @@
+.main-container {
+  display: flex;
+  justify-content: center;
+  .subheader-container {
+    position: absolute;
+    width: 954px;
+    height: 16px;
+    top: 120px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+
+    .calendar-filter-select,
+    .launch-filter-select {
+      width: 120px;
+      font-family: Helvetica Neue;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 12px;
+      color: #4b5563;
+    }
+
+    .filter-icon {
+      margin-top: 8px;
+    }
+
+    .calendar-filter-row {
+      position: absolute;
+      width: 153px;
+      height: 16px;
+      left: 0px;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .launch-filter-row {
+      position: absolute;
+      width: 141px;
+      height: 16px;
+      right: 0px;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+  }
+  .share-url-fab {
+    position: fixed;
+    bottom: 3rem;
+    right: 3rem;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014,
+      0 9px 28px 8px #0000000d;
+    padding: 10px;
+    .share-icon {
+      font-size: 30px;
+      color: #000;
+      svg {
+        height: 2rem !important;
+        width: 2rem !important;
+        vertical-align: middle;
+      }
+      &:hover {
+        color: #1890ff;
+      }
+    }
+  }
+}
