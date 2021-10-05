@@ -1,6 +1,7 @@
 .table-container {
   position: absolute;
   width: 75%;
+  max-width: 1200px;
   height: auto;
   top: 184px;
   border: 1px solid #e4e4e7;
@@ -237,4 +238,8 @@
   justify-content: center;
   top: 50%;
   position: absolute;
+}
+
+.modal-loading-indicator {
+  width: 80%;
 }

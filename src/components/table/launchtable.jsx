@@ -1,114 +1,75 @@
-import { React, useEffect, useState } from "react";
-import { Table, Tag } from "antd";
-import moment from "moment";
-import APICall from "../../utilities/APICall";
-import "./launchtable.scss";
-import CalendarFilterPicker from "../calendarfilterpicker/calendarfilterpicker";
-import LaunchDetailsModal from "../launchdetailsmodal/launchdetailsmodal";
-import { LoadingOutlined } from "@ant-design/icons";
-import qs from "qs";
-import { createBrowserHistory } from "history";
+import { React, useEffect, useState } from 'react';
+import { Table, Tag } from 'antd';
+import moment from 'moment';
+import APICall from '../../utilities/APICall';
+import './launchtable.scss';
+import CalendarFilterPicker from '../calendarfilterpicker/calendarfilterpicker';
+import LaunchDetailsModal from '../launchdetailsmodal/launchdetailsmodal';
+import { LoadingOutlined } from '@ant-design/icons';
+import qs from 'qs';
+import { createBrowserHistory } from 'history';
 
 const history = createBrowserHistory();
-const API_URL = "https://api.spacexdata.com/v4/launches/";
-const ROCKET_URL = "https://api.spacexdata.com/v4/rockets/";
-const PAYLOAD_URL = "https://api.spacexdata.com/v4/payloads/";
-const LAUNCHPAD_URL = "https://api.spacexdata.com/v4/launchpads/";
+const API_URL = 'https://api.spacexdata.com/v4/launches/';
 
 const columns = [
   {
-    title: "No:",
-    dataIndex: "launchNumber",
-    key: "launchNumber",
-    render: (text) => <p>{text}</p>,
-    responsive: ["md", "lg"],
+    title: 'No:',
+    dataIndex: 'launchNumber',
+    key: 'launchNumber',
+    render: text => <p>{text}</p>
   },
   {
-    title: "Launch Time(UTC)",
-    dataIndex: "launchTime",
-    key: "launchTime",
-    render: (text) => <p>{text}</p>,
-    responsive: ["md", "lg"],
+    title: 'Launch Time (Local)',
+    dataIndex: 'launchTime',
+    key: 'launchTime',
+    render: text => <p>{text}</p>
   },
   {
-    title: "Launched(UTC)",
-    dataIndex: "launchTimeShort",
-    key: "launchTimeShort",
-    render: (text) => <p>{text}</p>,
-    responsive: ["sm", "xs"],
+    title: 'Mission',
+    dataIndex: 'mission',
+    key: 'mission',
+    render: text => <p>{text}</p>
   },
   {
-    title: "Location",
-    dataIndex: "location",
-    key: "location",
-    render: (text) => <p>{text}</p>,
-    responsive: ["md", "lg"],
-  },
-  {
-    title: "Mission",
-    dataIndex: "mission",
-    key: "mission",
-    render: (text) => <p>{text}</p>,
-  },
-  {
-    title: "Orbit",
-    dataIndex: "orbit",
-    key: "orbit",
-    render: (text) => <p>{text}</p>,
-    responsive: ["md", "lg"],
-  },
-  {
-    title: "Launch Status",
-    dataIndex: "launchStatus",
-    key: "launchStatus",
-    render: (launchStatus) => {
+    title: 'Launch Status',
+    dataIndex: 'launchStatus',
+    key: 'launchStatus',
+    render: launchStatus => {
       let color;
       switch (launchStatus) {
-        case "Failed":
-          color = "red";
+        case 'Failed':
+          color = 'red';
           break;
-        case "Upcoming":
-          color = "orange";
+        case 'Upcoming':
+          color = 'orange';
           break;
         default:
-          color = "green";
+          color = 'green';
       }
       return (
         <Tag color={color} key={launchStatus}>
           {launchStatus}
         </Tag>
       );
-    },
-  },
-  {
-    title: "Rocket",
-    dataIndex: "rocket",
-    key: "rocket",
-    render: (text) => <p>{text}</p>,
-    responsive: ["md", "lg"],
-  },
+    }
+  }
 ];
 
-const generateTableData = (launchesData) => {
+const generateTableData = launchesData => {
   let tableData = [];
   launchesData.map((launch, index) => {
     tableData.push({
       launchNumber: index + 1,
       launchTime: moment(Date.parse(launch.launch_date)).format(
-        "DD MMM YYYY HH:mm"
+        'DD MMM YYYY HH:mm'
       ),
-      launchTimeShort: moment(Date.parse(launch.launch_date)).format(
-        "DD MMM YYYY"
-      ),
-      location: launch.launch_site,
       mission: launch.mission_name,
-      orbit: launch.payload_orbit,
       launchStatus: launch.upcoming
-        ? "Upcoming"
+        ? 'Upcoming'
         : launch.launch_success
-        ? "Success"
-        : "Failed",
-      rocket: launch.rocket_name,
+        ? 'Success'
+        : 'Failed'
     });
   });
   return tableData;
@@ -117,7 +78,7 @@ const generateTableData = (launchesData) => {
 export default function LaunchTable({
   selectedLaunchFilter,
   selectedCalendarFilter,
-  onFilterUpdateFromURL,
+  onFilterUpdateFromURL
 }) {
   const [launchesData, setLaunchesData] = useState([]);
   const [launchesToDisplay, setLaunchesToDisplay] = useState([]);
@@ -134,10 +95,10 @@ export default function LaunchTable({
 
   useEffect(() => {
     setLoading(true);
-    if (JSON.parse(localStorage.getItem("launchData")) === null) {
+    if (JSON.parse(sessionStorage.getItem('launchData')) === null) {
       let launchData = [];
-      APICall(API_URL).then((launchesData) => {
-        launchesData.forEach((dataItem) => {
+      APICall(API_URL).then(launchesData => {
+        launchesData.forEach(dataItem => {
           let {
             id: launch_id,
             flight_number,
@@ -145,106 +106,72 @@ export default function LaunchTable({
               article: article_link,
               webcast: webcast_link,
               wikipedia: wikipedia_link,
-              patch: { small: mission_patch_small },
+              patch: { small: mission_patch_small }
             },
             name,
             details: description,
             rocket: rocket_id,
             success: launch_success,
-            payloads: payload_ids,
             date_utc: launch_date,
+            payloads: payload_ids,
             launchpad: launchpad_id,
-            upcoming: upcoming,
+            upcoming: upcoming
           } = dataItem;
 
-          let rocketName,
-            rocketType,
-            rocketCompany,
-            rocketCountry,
-            orbit,
-            payloadType,
-            launchSite;
-
-          APICall(`${ROCKET_URL}${rocket_id}`).then((rocketData) => {
-            rocketName = rocketData.name;
-            rocketType = `${rocketData.engines.type} ${
-              rocketData.engines.version ? rocketData.engines.version : ""
-            }`;
-            rocketCompany = rocketData.company;
-            rocketCountry = rocketData.country;
-            return APICall(`${PAYLOAD_URL}${payload_ids[0]}`).then(
-              (payloadData) => {
-                orbit = payloadData.orbit;
-                payloadType = payloadData.type;
-                return APICall(`${LAUNCHPAD_URL}${launchpad_id}`).then(
-                  (launchpadData) => {
-                    launchSite = launchpadData.name;
-                    let launchItem = {
-                      id: launch_id,
-                      flight_number: flight_number,
-                      upcoming: upcoming,
-                      mission_patch: mission_patch_small,
-                      mission_name: name,
-                      launch_success: launch_success,
-                      article_link: article_link,
-                      wikipedia_link: wikipedia_link,
-                      webcast_link: webcast_link,
-                      mission_description: description,
-                      rocket_name: rocketName,
-                      rocket_type: rocketType,
-                      rocket_company: rocketCompany,
-                      rocket_country: rocketCountry,
-                      launch_date: launch_date,
-                      payload_orbit: orbit,
-                      payload_type: payloadType,
-                      launch_site: launchSite,
-                    };
-                    launchData.push(launchItem);
-                  }
-                );
-              }
-            );
-          });
+          let launchItem = {
+            id: launch_id,
+            flight_number: flight_number,
+            launch_date,
+            upcoming: upcoming,
+            mission_patch: mission_patch_small,
+            mission_name: name,
+            launch_success: launch_success,
+            article_link: article_link,
+            wikipedia_link: wikipedia_link,
+            webcast_link: webcast_link,
+            mission_description: description,
+            rocket_id,
+            payload_id: payload_ids[0],
+            launchpad_id
+          };
+          launchData.push(launchItem);
         });
-
-        setTimeout(() => {
-          launchData.sort(
-            (a, b) => new Date(b.launch_date) - new Date(a.launch_date)
-          );
-          setLaunchesData(launchData);
-          localStorage.setItem("launchData", JSON.stringify(launchData));
-          setLaunchesToDisplay(launchData);
-          setLoading(false);
-        }, 3000);
+        launchData.sort(
+          (a, b) => new Date(b.launch_date) - new Date(a.launch_date)
+        );
+        setLaunchesData(launchData);
+        sessionStorage.setItem('launchData', JSON.stringify(launchData));
+        setLaunchesToDisplay(launchData);
+        setLoading(false);
       });
     } else {
-      let localData = JSON.parse(localStorage.getItem("launchData"));
+      let localData = JSON.parse(sessionStorage.getItem('launchData'));
       setLaunchesData(localData);
-      localStorage.setItem("launchData", JSON.stringify(localData));
+      sessionStorage.setItem('launchData', JSON.stringify(localData));
       setLaunchesToDisplay(localData);
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    const filterParams = history.location.search.split("?")[1];
+    const filterParams = history.location.search.split('?')[1];
     const filtersFromParams = qs.parse(filterParams, { comma: true });
 
-    setActiveCalendarFilter(filtersFromParams["calendarFilter"]);
-    setActiveLaunchFilter(filtersFromParams["launchFilter"]);
+    setActiveCalendarFilter(filtersFromParams['calendarFilter']);
+    setActiveLaunchFilter(filtersFromParams['launchFilter']);
 
     setCurrentPage(
-      filtersFromParams["page"] === undefined ? 1 : filtersFromParams["page"]
+      filtersFromParams['page'] === undefined ? 1 : filtersFromParams['page']
     );
 
     setFilters({
-      ["launchFilter"]: filtersFromParams["launchFilter"],
-      ["calendarFilter"]: filtersFromParams["calendarFilter"],
+      ['launchFilter']: filtersFromParams['launchFilter'],
+      ['calendarFilter']: filtersFromParams['calendarFilter']
     });
 
     onFilterUpdateFromURL(
-      filtersFromParams["launchFilter"],
-      filtersFromParams["calendarFilter"]
+      filtersFromParams['launchFilter'],
+      filtersFromParams['calendarFilter']
     );
   }, [history]);
 
@@ -259,8 +186,8 @@ export default function LaunchTable({
       setActiveLaunchFilter(selectedLaunchFilter);
       setFilters({
         ...filters,
-        ["launchFilter"]: selectedLaunchFilter,
-        ["calendarFilter"]: selectedCalendarFilter,
+        ['launchFilter']: selectedLaunchFilter,
+        ['calendarFilter']: selectedCalendarFilter
       });
     }
   }, [selectedCalendarFilter, selectedLaunchFilter]);
@@ -273,7 +200,7 @@ export default function LaunchTable({
   useEffect(() => {
     if (activeLaunchFilter !== null && selectedLaunchFilter !== null) {
       setActiveLaunchFilter(selectedLaunchFilter);
-      setFilters({ ...filters, ["launchFilter"]: selectedLaunchFilter });
+      setFilters({ ...filters, ['launchFilter']: selectedLaunchFilter });
     }
   }, [selectedLaunchFilter]);
 
@@ -284,8 +211,8 @@ export default function LaunchTable({
 
   useEffect(() => {
     if (activeCalendarFilter !== null && selectedCalendarFilter !== null) {
-      setFilters({ ...filters, ["calendarFilter"]: selectedCalendarFilter });
-      selectedCalendarFilter === "custom" && setIsCalendarFilterVisible(true);
+      setFilters({ ...filters, ['calendarFilter']: selectedCalendarFilter });
+      selectedCalendarFilter === 'custom' && setIsCalendarFilterVisible(true);
     }
   }, [selectedCalendarFilter]);
 
@@ -293,21 +220,21 @@ export default function LaunchTable({
     activeLaunchFilter === null &&
       setLaunchesToDisplay(filterByDates(launchesData, activeCalendarFilter));
     if (
-      activeCalendarFilter === "custom" &&
-      JSON.parse(localStorage.getItem("customDates")) !== null
+      activeCalendarFilter === 'custom' &&
+      JSON.parse(sessionStorage.getItem('customDates')) !== null
     ) {
-      setRangeSelected(JSON.parse(localStorage.getItem("customDates")));
+      setRangeSelected(JSON.parse(sessionStorage.getItem('customDates')));
     }
   }, [activeCalendarFilter]);
 
   useEffect(() => {
     if (rangeSelected !== null) {
-      localStorage.setItem("customDates", JSON.stringify(rangeSelected));
+      sessionStorage.setItem('customDates', JSON.stringify(rangeSelected));
       if (activeLaunchFilter !== null) {
         let filteredLaunches = filterByLaunch(launchesData, activeLaunchFilter);
         setLaunchesToDisplay(
           filteredLaunches.filter(
-            (launch) =>
+            launch =>
               launch.launch_date >= rangeSelected.start &&
               launch.launch_date <= rangeSelected.end
           )
@@ -315,7 +242,7 @@ export default function LaunchTable({
       } else {
         setLaunchesToDisplay(
           launchesData.filter(
-            (launch) =>
+            launch =>
               launch.launch_date >= rangeSelected.start &&
               launch.launch_date <= rangeSelected.end
           )
@@ -329,8 +256,8 @@ export default function LaunchTable({
   }, [launchesToDisplay]);
 
   useEffect(() => {
-    setActiveCalendarFilter(filters["launchFilter"]);
-    setActiveCalendarFilter(filters["calendarFilter"]);
+    setActiveCalendarFilter(filters['launchFilter']);
+    setActiveCalendarFilter(filters['calendarFilter']);
     syncFiltersWithURL();
   }, [filters]);
 
@@ -341,20 +268,18 @@ export default function LaunchTable({
   const filterByLaunch = (launchesData, filter) => {
     let filterResults = [];
     switch (filter) {
-      case "successful":
+      case 'successful':
         filterResults = launchesData.filter(
-          (launch) => launch.launch_success === true
+          launch => launch.launch_success === true
         );
         break;
-      case "failed":
+      case 'failed':
         filterResults = launchesData.filter(
-          (launch) => launch.launch_success !== true && launch.upcoming !== true
+          launch => launch.launch_success !== true && launch.upcoming !== true
         );
         break;
-      case "upcoming":
-        filterResults = launchesData.filter(
-          (launch) => launch.upcoming === true
-        );
+      case 'upcoming':
+        filterResults = launchesData.filter(launch => launch.upcoming === true);
         break;
       default:
         filterResults = launchesData;
@@ -365,46 +290,46 @@ export default function LaunchTable({
   const filterByDates = (launchesData, filter) => {
     let filterResults = [];
     switch (filter) {
-      case "pastweek":
+      case 'pastweek':
         filterResults = launchesData.filter(
-          (launch) =>
+          launch =>
             launch.launch_date >=
-            moment(new Date()).subtract(1, "week").toISOString()
+            moment(new Date()).subtract(1, 'week').toISOString()
         );
         break;
-      case "pastmonth":
+      case 'pastmonth':
         filterResults = launchesData.filter(
-          (launch) =>
+          launch =>
             launch.launch_date >=
-            moment(new Date()).subtract(1, "month").toISOString()
+            moment(new Date()).subtract(1, 'month').toISOString()
         );
         break;
-      case "past3months":
+      case 'past3months':
         filterResults = launchesData.filter(
-          (launch) =>
+          launch =>
             launch.launch_date >=
-            moment(new Date()).subtract(3, "months").toISOString()
+            moment(new Date()).subtract(3, 'months').toISOString()
         );
         break;
-      case "past6months":
+      case 'past6months':
         filterResults = launchesData.filter(
-          (launch) =>
+          launch =>
             launch.launch_date >=
-            moment(new Date()).subtract(6, "months").toISOString()
+            moment(new Date()).subtract(6, 'months').toISOString()
         );
         break;
-      case "pastyear":
+      case 'pastyear':
         filterResults = launchesData.filter(
-          (launch) =>
+          launch =>
             launch.launch_date >=
-            moment(new Date()).subtract(1, "year").toISOString()
+            moment(new Date()).subtract(1, 'year').toISOString()
         );
         break;
-      case "past2years":
+      case 'past2years':
         filterResults = launchesData.filter(
-          (launch) =>
+          launch =>
             launch.launch_date >=
-            moment(new Date()).subtract(2, "year").toISOString()
+            moment(new Date()).subtract(2, 'year').toISOString()
         );
         break;
       default:
@@ -414,11 +339,11 @@ export default function LaunchTable({
     return filterResults;
   };
 
-  const onRangeChange = (rangeSelected) => {
+  const onRangeChange = rangeSelected => {
     rangeSelected !== null &&
       setRangeSelected({
-        start: moment(rangeSelected[0]).format("YYYY-MM-DDTHH:mm:ss"),
-        end: moment(rangeSelected[1]).format("YYYY-MM-DDTHH:mm:ss"),
+        start: moment(rangeSelected[0]).format('YYYY-MM-DDTHH:mm:ss'),
+        end: moment(rangeSelected[1]).format('YYYY-MM-DDTHH:mm:ss')
       });
   };
 
@@ -432,7 +357,7 @@ export default function LaunchTable({
 
   const syncFiltersWithURL = () => {
     let stringifiedFilterParams = qs.stringify(filters, {
-      arrayFormat: "comma",
+      arrayFormat: 'comma'
     });
 
     stringifiedFilterParams = `page=${currentPage}&`.concat(
@@ -447,11 +372,11 @@ export default function LaunchTable({
   };
 
   let displayContent = loading ? (
-    <div className="loading-indicator">
+    <div className='loading-indicator'>
       <LoadingOutlined width={100} height={100} />
     </div>
   ) : (
-    <div className="table-container">
+    <div className='table-container'>
       {launchesToDisplay && launchesToDisplay.length > 0 ? (
         <>
           <Table
@@ -459,13 +384,13 @@ export default function LaunchTable({
             dataSource={generateTableData(launchesToDisplay)}
             onRow={(record, rowIndex) => {
               return {
-                onClick: (event) => {
-                  let launchToModal = launchesToDisplay.filter((launch) => {
+                onClick: event => {
+                  let launchToModal = launchesToDisplay.filter(launch => {
                     return launch.mission_name === record.mission;
                   })[0];
                   setLaunchToModal(launchToModal);
                   openModal();
-                },
+                }
               };
             }}
             onChange={onPageChange}
@@ -485,7 +410,7 @@ export default function LaunchTable({
           )}
         </>
       ) : (
-        <h2 className="indicator">No results found for the specified filter</h2>
+        <h2 className='indicator'>No results found for the specified filter</h2>
       )}
     </div>
   );
